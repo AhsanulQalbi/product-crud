@@ -1,0 +1,50 @@
+type User {
+  _id : ID!
+  user_id : String!
+  name: String!
+  email: String!
+  password: String!
+}
+
+type Query {
+  users: [User!]!
+  user(user_id: ID!): User
+}
+
+type Mutation {
+  updateUser(user_id: ID!, name: String, email: String): User!
+  deleteUser(user_id: ID!): User!
+}
+
+type Product {
+  _id: ID!
+  product_id : String!
+  name: String!
+  price: Int!
+  stock: Int!
+}
+
+extend type Query {
+  products: [Product!]!
+  product(product_id: ID!): Product
+}
+
+extend type Mutation {
+  createProduct(name: String!, price: Int!, stock: Int!): Product!
+  updateProduct(product_id: ID!, name: String, price: Int, stock: Int): Product!
+  deleteProduct(product_id: ID!): Product!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+extend type Mutation {
+  login(email: String!, password: String!): AuthPayload!
+  register(name: String!, email: String!, password: String!): User!
+}
+
+extend type Query {
+  me: User!
+}
