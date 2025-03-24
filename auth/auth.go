@@ -1,13 +1,14 @@
 package auth
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var jwtSecret = []byte("supersecretkey")
+var jwtSecret = []byte(os.Getenv("SECRET_KEY"))
 
 type User struct {
 	ID       primitive.ObjectID `bson:"_id,omitempty"`
@@ -28,6 +29,7 @@ func GenerateToken(userID string) (string, error) {
 		"user_id": userID,
 		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
 }
@@ -36,6 +38,7 @@ func ParseToken(tokenStr string) (string, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
+
 	if err != nil {
 		return "", err
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"graphql-crud/config"
 	"graphql-crud/graph"
 	"graphql-crud/middleware"
@@ -62,6 +63,9 @@ func main() {
 	http.Handle("/query", corsMiddleware(middleware.AuthMiddleware(srv)))
 	http.Handle("/", corsMiddleware(playground.Handler("GraphQL playground", "/public")))
 
-	log.Printf("Server running at http://localhost:%s/", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	fmt.Printf("Server running at http://localhost:%s/", port)
+	err = http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		log.Fatal("Error serving locally")
+	}
 }
